@@ -1,8 +1,8 @@
 //
 //  UIView+Ext.swift
-//  MovieApp
+//  Bankey App
 //
-//  Created by Elif İlay KANDEMİR on 13.09.2022.
+//  Created by Elif İlay Eser
 //
 
 import UIKit

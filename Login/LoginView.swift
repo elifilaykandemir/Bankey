@@ -2,7 +2,7 @@
 //  LoginView.swift
 //  Bankey
 //
-//  Created by Elif İlay KANDEMİR on 20.10.2023.
+//  Created by Elif İlay Eser
 //
 
 import Foundation
@@ -21,7 +21,7 @@ class LoginView : UIView {
         var stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.spacing = 8
+        stackView.spacing = 4
         return stackView
     }()
     
@@ -29,7 +29,6 @@ class LoginView : UIView {
         var textField = UITextField()
         textField.placeholder = "Username"
         textField.delegate = self
-        textField.isSecureTextEntry = true
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -38,8 +37,8 @@ class LoginView : UIView {
         var textField = UITextField()
         textField.placeholder = "Password"
         textField.delegate = self
+        textField.isSecureTextEntry = true
         textField.translatesAutoresizingMaskIntoConstraints = false
-
         return textField
     }()
  
@@ -53,6 +52,8 @@ class LoginView : UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+
 }
 
 extension LoginView {
@@ -62,14 +63,13 @@ extension LoginView {
         stackView.addArrangedSubview(userNameTextField)
         stackView.addArrangedSubview(dividerView)
         stackView.addArrangedSubview(passwordTextField)
-        
         addSubview(stackView)
         
     }
     
     func setUpLayout() {
         translatesAutoresizingMaskIntoConstraints = false
-        stackView.addConstraint(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: nil, height: nil, centerX: centerXAnchor, centerY: centerYAnchor)
+        stackView.addConstraint(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: nil, height:nil, centerX: centerXAnchor, centerY: centerYAnchor)
         dividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
         layer.cornerRadius = 5
@@ -87,11 +87,7 @@ extension LoginView : UITextFieldDelegate {
     }
     
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        if textField.text != "" {
-            return true
-        } else {
-            return false
-        }
+        return true
     }
     
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {

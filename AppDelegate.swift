@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  Bankey
 //
-//  Created by Elif İlay KANDEMİR on 20.10.2023.
+//  Created by Elif İlay Eser
 //
 
 import UIKit
