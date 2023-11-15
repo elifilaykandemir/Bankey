@@ -22,9 +22,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         
        
-        let vc = LoginViewController()
-        let navVC = UINavigationController(rootViewController: vc)
-        window.rootViewController = navVC
+        //let vc = LoginViewController()
+        let vc = OnboardingContainerViewController()
+        //let navVC = UINavigationController(rootViewController: vc)
+        window.rootViewController = vc
         window.backgroundColor = .systemBackground
         
         window.makeKeyAndVisible()
