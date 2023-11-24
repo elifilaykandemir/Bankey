@@ -23,9 +23,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
        
         //let vc = LoginViewController()
-        //let vc = OnboardingContainerViewController()
+        let vc = OnboardingContainerViewController()
         //let navVC = UINavigationController(rootViewController: vc)
-        let vc = OnbordingViewController()
+        
         window.rootViewController = vc
         window.backgroundColor = .systemBackground
         
