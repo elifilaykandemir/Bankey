@@ -7,11 +7,18 @@
 
 import UIKit
 
+protocol OnboardingContainerViewControllerDelegate : AnyObject{
+    func didFinishOnboarding()
+}
+
 class OnboardingContainerViewController: UIViewController {
+    
+    weak var delegate: OnboardingContainerViewControllerDelegate?
 
     let pageViewController: UIPageViewController
     var pages = [UIViewController]()
     var currentVC: UIViewController
+    let closeButton = UIButton()
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         
@@ -37,6 +44,15 @@ class OnboardingContainerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setUp()
+        style()
+        layout()
+        
+        
+    }
+    
+    private func setUp(){
+        
         view.backgroundColor = .systemPurple
         
         addChild(pageViewController)
@@ -55,6 +71,21 @@ class OnboardingContainerViewController: UIViewController {
         
         pageViewController.setViewControllers([pages.first!], direction: .forward, animated: false, completion: nil)
         currentVC = pages.first!
+    }
+    
+    private func layout(){
+        NSLayoutConstraint.activate([
+            closeButton.leadingAnchor.constraint(equalToSystemSpacingAfter: view.leadingAnchor, multiplier: 2),
+            closeButton.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 2)
+        ])
+    }
+    
+    private func style(){
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        closeButton.setTitle("Close", for: [] )
+        closeButton.setTitleColor(.blue, for: .normal)
+        closeButton.addTarget(self, action:  #selector(closeTapped), for: .primaryActionTriggered)
+        view.addSubview(closeButton)
     }
 }
 
@@ -90,4 +121,11 @@ extension OnboardingContainerViewController: UIPageViewControllerDataSource {
     }
 }
 
+// MARK: - Action
+
+extension OnboardingContainerViewController {
+    @objc func closeTapped(_ sender: UIButton){
+        delegate?.didFinishOnboarding()
+    }
+}
 

@@ -69,7 +69,11 @@ extension LoginView {
     
     func setUpLayout() {
         translatesAutoresizingMaskIntoConstraints = false
-        stackView.addConstraint(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: nil, height:nil, centerX: centerXAnchor, centerY: centerYAnchor)
+        stackView.setUpConstraints(leadingAnchor: leadingAnchor, leadingConstant: 8, topAnchor: topAnchor ,
+                                   trailingAnchor: trailingAnchor, trailingConstant: 8,
+                                   bottomAnchor: bottomAnchor,
+                                   centerYAnchor: centerYAnchor, centerXAnchor: centerXAnchor)
+
         dividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
         layer.cornerRadius = 5

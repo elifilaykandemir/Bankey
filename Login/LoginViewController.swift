@@ -7,9 +7,21 @@
 
 import UIKit
 
-class LoginViewController: UIViewController {
+protocol LogoutDelegate : AnyObject {
+    func didLogout()
+}
 
+protocol LoginViewControllerDelegate : AnyObject {
+    func didLogin(_ sender: LoginViewController)
+    
+}
+
+class LoginViewController: UIViewController {
+    
+    weak var delegate : LoginViewControllerDelegate?
+    
     let loginView = LoginView()
+    
     lazy var signInButton : UIButton = {
         var button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -43,6 +55,11 @@ class LoginViewController: UIViewController {
         setUp()
         configure()
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        signInButton.configuration?.showsActivityIndicator = false
+    }
 
 
 }
@@ -58,12 +75,22 @@ extension LoginViewController {
         view.addSubview(loginView)
         view.addSubview(signInButton)
         view.addSubview(errorMessageLabel)
+     
         
-        loginView.addConstraint(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: nil, height: nil , centerX: view.centerXAnchor, centerY: view.centerYAnchor)
+        loginView.setUpConstraints(leadingAnchor: view.leadingAnchor, leadingConstant: 20,
+                                   trailingAnchor: view.trailingAnchor, trailingConstant: 14,
+                                   centerYAnchor: view.centerYAnchor, centerXAnchor: view.centerXAnchor
+        )
+    
+        signInButton.setUpConstraints(leadingAnchor: view.leadingAnchor, leadingConstant: 20,
+                                      topAnchor:loginView.bottomAnchor, topConstant: 16,
+                                      trailingAnchor: view.trailingAnchor, trailingConstant: 16
+        )
         
-        signInButton.addConstraint(top: loginView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingBottom: 0, paddingRight: 16, width: nil, height: nil, centerX: nil, centerY: nil )
-        
-        errorMessageLabel.addConstraint(top: signInButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingBottom: 0, paddingRight: 16, width: nil, height: nil, centerX: nil, centerY: nil)
+        errorMessageLabel.setUpConstraints(leadingAnchor: view.leadingAnchor, leadingConstant: 16,
+                                           topAnchor:signInButton.bottomAnchor, topConstant: 16,
+                                           trailingAnchor: view.trailingAnchor, trailingConstant: 16
+        )
     }
 }
 
@@ -84,8 +111,9 @@ extension LoginViewController {
             configureView(withMessage: "Username and password cannot be blank")
         }
         
-        if username == "elif" && password == "1234"{
+        if username == "" && password == ""{
             signInButton.configuration?.showsActivityIndicator = true
+            delegate?.didLogin(self)
         } else {
             configureView(withMessage: "Incorrect username or password")
         }

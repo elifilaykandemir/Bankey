@@ -10,8 +10,9 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-   
-
+    let loginViewController = LoginViewController()
+    let onboardingViewController = OnboardingContainerViewController()
+    let dummyViewController = DummyViewController()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -21,13 +22,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         
-       
-        //let vc = LoginViewController()
-        let vc = OnboardingContainerViewController()
         //let navVC = UINavigationController(rootViewController: vc)
-        
-        window.rootViewController = vc
+        loginViewController.delegate = self
+        onboardingViewController.delegate = self
+        dummyViewController.delegate = self
+        window.rootViewController = loginViewController
         window.backgroundColor = .systemBackground
+        
         
         window.makeKeyAndVisible()
         self.window = window
@@ -64,3 +65,42 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 }
 
+extension SceneDelegate: LoginViewControllerDelegate {
+    func didLogin(_ sender: LoginViewController) {
+        setRootViewController(onboardingViewController)
+        if LocalState.hasOnboarded {
+            setRootViewController(dummyViewController)
+        } else {
+            setRootViewController(onboardingViewController)
+        }
+    }
+}
+extension SceneDelegate: OnboardingContainerViewControllerDelegate {
+    func didFinishOnboarding() {
+        LocalState.hasOnboarded = true
+        setRootViewController(dummyViewController)
+    }
+    
+   
+}
+extension SceneDelegate: LogoutDelegate{
+    func didLogout() {
+        print("foo -logout")
+        setRootViewController(loginViewController)
+    }
+    
+    
+}
+
+extension SceneDelegate {
+    func setRootViewController( _ vc: UIViewController, animated: Bool = true){
+        guard animated , let window = self.window else {
+            self.window?.rootViewController = vc
+            self.window?.makeKeyAndVisible()
+            return
+        }
+        window.rootViewController = vc
+        window.makeKeyAndVisible()
+        UIView.transition(with: window, duration: 0.4 ,options: .transitionFlipFromLeft, animations: nil)
+    }
+}
