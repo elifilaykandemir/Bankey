@@ -2,7 +2,7 @@
 //  OnboardingContainerViewController.swift
 //  Bankey
 //
-//  Created by Elif İlay KANDEMİR on 16.11.2023.
+//  Created by Elif İlay KANDEMİR
 //
 
 import UIKit
