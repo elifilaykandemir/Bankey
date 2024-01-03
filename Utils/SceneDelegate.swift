@@ -30,7 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         loginViewController.delegate = self
         onboardingViewController.delegate = self
         dummyViewController.delegate = self
-        window.rootViewController = mainViewController
+        window.rootViewController = AccountSummaryViewController()
         window.backgroundColor = .systemBackground
         
         
