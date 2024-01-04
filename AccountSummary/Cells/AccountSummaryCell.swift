@@ -10,7 +10,7 @@ import Foundation
 
 class AccountSummaryCell: UITableViewCell {
     static var reuseID = "AccountSummaryCell"
-    static let rowHeight : CGFloat = 100
+    static let rowHeight : CGFloat = 112
     
     lazy var typeLabel: UILabel = {
         var label = UILabel()
@@ -56,7 +56,8 @@ class AccountSummaryCell: UITableViewCell {
         label.font = UIFont.preferredFont(forTextStyle: .body)
         label.adjustsFontForContentSizeCategory = true
         label.textAlignment = .right
-        label.text =  "$929,466.63"
+        label.attributedText = makeFormattedBalance(dollars: "929,466", cents: "23")
+      
         return label
     }()
     
@@ -96,4 +97,19 @@ extension AccountSummaryCell{
         balanceStackView.setUpConstraints(leadingAnchor: nameLabel.trailingAnchor, leadingConstant: 4, topAnchor: underlineView.topAnchor, topConstant: -8, trailingAnchor: trailingAnchor, trailingConstant: 32)
         chevronImageView.setUpConstraints(topAnchor: underlineView.bottomAnchor, topConstant: -8, trailingAnchor: trailingAnchor, trailingConstant: 8)
     }
+    
+    private func makeFormattedBalance(dollars: String, cents: String) -> NSMutableAttributedString {
+            let dollarSignAttributes: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .callout), .baselineOffset: 8]
+            let dollarAttributes: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .title1)]
+            let centAttributes: [NSAttributedString.Key: Any] = [.font: UIFont.preferredFont(forTextStyle: .footnote), .baselineOffset: 8]
+            
+            let rootString = NSMutableAttributedString(string: "$", attributes: dollarSignAttributes)
+            let dollarString = NSAttributedString(string: dollars, attributes: dollarAttributes)
+            let centString = NSAttributedString(string: cents, attributes: centAttributes)
+            
+            rootString.append(dollarString)
+            rootString.append(centString)
+            
+            return rootString
+        }
 }
