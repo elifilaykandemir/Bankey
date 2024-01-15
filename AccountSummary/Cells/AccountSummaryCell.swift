@@ -45,6 +45,7 @@ class AccountSummaryCell: UITableViewCell {
         label.font = UIFont.preferredFont(forTextStyle: .body)
         label.adjustsFontForContentSizeCategory = true
         label.text = "Account Name"
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -68,6 +69,7 @@ class AccountSummaryCell: UITableViewCell {
         label.adjustsFontForContentSizeCategory = true
         label.textAlignment = .right
         label.text =  "Some balance"
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
