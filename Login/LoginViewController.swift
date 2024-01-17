@@ -29,6 +29,7 @@ class LoginViewController: UIViewController {
         label.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         label.adjustsFontForContentSizeCategory = true
         label.text = "Bankey"
+        label.alpha = 0
         return label
     }()
     
@@ -40,6 +41,7 @@ class LoginViewController: UIViewController {
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
         label.text = "Your premium source for all things banking!"
+        label.alpha = 0
         return label
     }()
     
@@ -71,6 +73,13 @@ class LoginViewController: UIViewController {
         return loginView.passwordTextField.text
     }
     
+    //Animation
+    var leadingEdgeOnScreen: CGFloat = 16
+    var leadingEdgeOffScreen: CGFloat = -1000
+    
+    var titleLeadingAnchor: NSLayoutConstraint?
+    var subtitleLeadingAnchor: NSLayoutConstraint?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUp()
@@ -80,6 +89,11 @@ class LoginViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         signInButton.configuration?.showsActivityIndicator = false
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        animate()
     }
 
 
@@ -103,9 +117,16 @@ extension LoginViewController {
                                    trailingAnchor: view.trailingAnchor, trailingConstant: 14,
                                    centerYAnchor: view.centerYAnchor, centerXAnchor: view.centerXAnchor
         )
-        titleLabel.setUpConstraints(centerXAnchor:view.centerXAnchor)
+        titleLabel.setUpConstraints(trailingAnchor: loginView.trailingAnchor)
+        titleLeadingAnchor = titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor,
+                                                                 constant: leadingEdgeOffScreen)
+        titleLeadingAnchor?.isActive = true
         
-        subtitleLabel.setUpConstraints(leadingAnchor:loginView.leadingAnchor,topAnchor: titleLabel.bottomAnchor, topConstant: 24, trailingAnchor:loginView.trailingAnchor)
+        subtitleLabel.setUpConstraints(topAnchor: titleLabel.bottomAnchor, topConstant: 24,
+                                       trailingAnchor:loginView.trailingAnchor)
+        subtitleLeadingAnchor = subtitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: leadingEdgeOffScreen)
+        subtitleLeadingAnchor?.isActive = true
+        
         loginView.setUpConstraints(topAnchor: subtitleLabel.bottomAnchor, topConstant: 24)
     
     
@@ -164,5 +185,25 @@ extension LoginViewController {
             subtitleLabel.textColor = UIColor.white
         }
     }
-
+    private func animate(){
+        let duration = 0.8
+        let animator1 = UIViewPropertyAnimator(duration: duration, curve: .easeInOut) {
+            self.titleLeadingAnchor?.constant = self.leadingEdgeOnScreen
+            self.view.layoutIfNeeded()
+        }
+        animator1.startAnimation()
+        let animator2 = UIViewPropertyAnimator(duration: duration, curve: .easeInOut) {
+            self.subtitleLeadingAnchor?.constant = self.leadingEdgeOnScreen
+            self.view.layoutIfNeeded()
+        }
+        animator2.startAnimation(afterDelay: 0.25)
+        
+        let animator3 = UIViewPropertyAnimator(duration: duration*2, curve: .easeInOut) {
+            self.titleLabel.alpha = 1
+            self.subtitleLabel.alpha = 1
+            self.view.layoutIfNeeded()
+        }
+        animator3.startAnimation(afterDelay: 0.2)
+        
+    }
 }
