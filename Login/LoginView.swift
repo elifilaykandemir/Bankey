@@ -30,6 +30,7 @@ class LoginView : UIView {
         textField.placeholder = "Username"
         textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.autocapitalizationType = .none
         return textField
     }()
     
@@ -39,6 +40,7 @@ class LoginView : UIView {
         textField.delegate = self
         textField.isSecureTextEntry = true
         textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.autocapitalizationType = .none
         textField.enablePassswordToggle()
         return textField
     }()

@@ -11,6 +11,7 @@ class AccountSummaryHeaderView: UIView {
 
     
     @IBOutlet var contentView: UIView!
+    var shakeyBell = ShakeyBellView()
     
     override init(frame: CGRect) {
             super.init(frame: frame)
@@ -31,9 +32,13 @@ class AccountSummaryHeaderView: UIView {
         let bundle = Bundle(for: AccountSummaryHeaderView.self)
         bundle.loadNibNamed("AccountSummaryHeaderView", owner: self, options: nil)
         addSubview(contentView)
+        addSubview(shakeyBell)
         contentView.backgroundColor = appColor
         
         contentView.setUpConstraints(leadingAnchor: self.leadingAnchor,topAnchor: self.topAnchor,trailingAnchor: self.trailingAnchor,bottomAnchor: self.bottomAnchor)
+
+        shakeyBell.setUpConstraints(trailingAnchor: trailingAnchor,
+                                    bottomAnchor: bottomAnchor)
         
     }
 }
