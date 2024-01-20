@@ -18,6 +18,19 @@ class ShakeyBellView: UIView {
         return imageView
     }()
     
+    let buttonHeight: CGFloat = 16
+    
+    lazy var buttonView : UIButton = {
+        var button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .systemRed
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
+        button.layer.cornerRadius = buttonHeight/2
+        button.setTitle("9", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         layout()
@@ -37,7 +50,13 @@ extension ShakeyBellView {
    
     func layout(){
         addSubview(imageView)
-        imageView.setUpConstraints(width: 24, height: 24, centerYAnchor: centerYAnchor, centerXAnchor: self.centerXAnchor)
+        addSubview(buttonView)
+        imageView.setUpConstraints(width: 24, height: 24,
+                                   centerYAnchor: centerYAnchor,
+                                   centerXAnchor: self.centerXAnchor)
+        
+        buttonView.setUpConstraints(leadingAnchor: imageView.trailingAnchor, leadingConstant: -9,                               topAnchor:imageView.topAnchor,
+                                    width: 16, height: 16)
     }
     func setup(){
         let singleTap = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped(_:)))
@@ -111,4 +130,5 @@ extension UIView {
         layer.position = position
         layer.anchorPoint = point
     }
+    
 }
