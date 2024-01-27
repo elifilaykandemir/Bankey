@@ -32,7 +32,7 @@ class OnbordingViewController: UIViewController {
         label.textAlignment = .center
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
-        ///label.text = " Bankey is faster, eaiser to use and has a brand new look and feel that will make you feel like you are back in 1989"
+        //label.text = " Bankey is faster, eaiser to use and has a brand new look and feel that will make you feel like you are back in 1989"
         return label
     }()
     

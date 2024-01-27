@@ -55,7 +55,7 @@ extension ShakeyBellView {
                                    centerYAnchor: centerYAnchor,
                                    centerXAnchor: self.centerXAnchor)
         
-        buttonView.setUpConstraints(leadingAnchor: imageView.trailingAnchor, leadingConstant: -9,                               topAnchor:imageView.topAnchor,
+        buttonView.setUpConstraints(leadingAnchor: imageView.trailingAnchor, leadingConstant: -9, topAnchor:imageView.topAnchor,
                                     width: 16, height: 16)
     }
     func setup(){
