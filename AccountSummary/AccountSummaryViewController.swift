@@ -153,7 +153,7 @@ extension AccountSummaryViewController {
             case .success(let profile):
                 self.profile = profile
             case .failure(let error):
-                print(error.localizedDescription)
+                self.showErrorAlert(error: error, message: error.localizedDescription)
             }
             group.leave()
         }
@@ -194,6 +194,15 @@ extension AccountSummaryViewController {
                                          accountName: $0.name,
                                          balance: $0.amount)
         }
+    }
+    private func showErrorAlert(error: NetworkError, message: String) {
+        let alert = UIAlertController(title: error.title,
+                                      message: message,
+                                      preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Confirmation"), style: .default, handler: nil))
+        
+        present(alert, animated: true, completion: nil)
     }
 }
 
