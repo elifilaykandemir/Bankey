@@ -16,6 +16,35 @@ enum NetworkError: String, Error {
     case noConnection
     case decodingError
     
+    func titleAndMessage() -> (title: String, message: String) {
+        var title = ""
+        var message = ""
+        switch self {
+        case .serverError:
+            title = "Server Error"
+            message = "We could not process your request. Please try again."
+        case .decodingError:
+            title = "Network Error"
+            message = "Ensure you are connected to the internet. Please try again."
+        case .invalidURL:
+            title = "Invalid URL"
+            message = "The request was improperly formatted."
+        case .invalidURLRequest:
+            title = "Invalid Request"
+            message = "The request was improperly formatted."
+        case .requestFailed:
+            title = "Request Failed"
+            message = "The request failed due to an unknown error."
+        case .noConnection:
+            title = "No Internet Connection"
+            message = "Please check your internet connection and try again."
+        
+        }
+        return (title: title, message: message)
+    }
+    
+   
+    
     var title: String {
         switch self {
         case .invalidURL:

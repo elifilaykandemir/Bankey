@@ -10,8 +10,10 @@ import UIKit
 
 class AccountSummaryViewController: UIViewController {
     
+    // Request Models
     var profile : Profile?
     var accounts : [Account] = []
+    
     // View Model
     var headerViewModel = AccountSummaryHeaderView.ViewModel(welcomeMessage: "Welcome", name: "", date: Date())
     var accountCellViewModels: [AccountSummaryCell.ViewModel] = []
@@ -21,7 +23,16 @@ class AccountSummaryViewController: UIViewController {
     let headerView = AccountSummaryHeaderView(frame: .zero)
     let refreshControl = UIRefreshControl()
     
+    //Networking
+    var profileManager: ProfileManageable = ProfileManager()
     var isLoaded = false
+    
+    //Error Alert
+    lazy var errorAlert: UIAlertController = {
+        let alert = UIAlertController(title: "", message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        return alert
+    }()
   
     lazy var logoutBarButtonItem: UIBarButtonItem = {
         let barButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logoutTapped))
@@ -32,8 +43,7 @@ class AccountSummaryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        
-        
+     
     }
 }
 
@@ -137,6 +147,8 @@ extension AccountSummaryViewController {
             accounts = []
             isLoaded = false
         }
+    
+  
 }
 
 // MARK: - Networking
@@ -144,42 +156,53 @@ extension AccountSummaryViewController {
     private func fetchData() {
         let group = DispatchGroup()
         
-        //Testing - random user selection
-        let userID = String(Int.random(in: 1..<4))
+        // Testing - random number selection
+        let userId = String(Int.random(in: 1..<4))
         
+        fetchProfile(group: group, userId: userId)
+        fetchAccounts(group: group, userId: userId)
+        
+        group.notify(queue: .main) {
+            self.reloadView()
+        }
+    }
+    private func fetchProfile(group: DispatchGroup, userId: String) {
         group.enter()
-        fetchProfile(forUserId: userID) { result in
+        profileManager.fetchProfile(forUserId: userId) { result in
             switch result {
             case .success(let profile):
                 self.profile = profile
             case .failure(let error):
-                self.showErrorAlert(error: error, message: error.localizedDescription)
+                self.displayError(error)
             }
             group.leave()
         }
+    }
+    
+    private func fetchAccounts(group: DispatchGroup, userId: String) {
         group.enter()
-        fetchAccounts(forUserId: userID) { result in
-            switch result{
+        fetchAccounts(forUserId: userId) { result in
+            switch result {
             case .success(let accounts):
                 self.accounts = accounts
-                
             case .failure(let error):
-                print(error.localizedDescription)
+                self.displayError(error)
             }
             group.leave()
         }
-        group.notify(queue: .main){
-            self.tableView.refreshControl?.endRefreshing()
-            
-            guard let profile = self.profile else { return }
-            self.isLoaded = true
-            self.configureTableHeaderView(with: profile) //
-            self.configureTableCells(with: self.accounts)
-            self.tableView.reloadData()
-            
-        }
-        
     }
+    
+    private func reloadView() {
+        self.tableView.refreshControl?.endRefreshing()
+        
+        guard let profile = self.profile else { return }
+        
+        self.isLoaded = true
+        self.configureTableHeaderView(with: profile)
+        self.configureTableCells(with: self.accounts)
+        self.tableView.reloadData()
+    }
+
     
     private func configureTableHeaderView(with profile: Profile) {
         let vm = AccountSummaryHeaderView.ViewModel(welcomeMessage: "Good morning,",
@@ -195,15 +218,33 @@ extension AccountSummaryViewController {
                                          balance: $0.amount)
         }
     }
-    private func showErrorAlert(error: NetworkError, message: String) {
-        let alert = UIAlertController(title: error.title,
-                                      message: message,
-                                      preferredStyle: .alert)
+    private func displayError(_ error: NetworkError) {
+        let titleAndMessage = titleAndMessage(for: error)
+        self.showErrorAlert(title: titleAndMessage.0, message: titleAndMessage.1)
+    }
+
+    private func titleAndMessage(for error: NetworkError) -> (String, String) {
+        let tuple = error.titleAndMessage()
+        return  (tuple.title, tuple.message)
+    }
+    
+    private func showErrorAlert(title: String, message: String) {
+
+        errorAlert.title = title
+        errorAlert.message = message
         
-        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Confirmation"), style: .default, handler: nil))
-        
-        present(alert, animated: true, completion: nil)
+        present(errorAlert, animated: true, completion: nil)
     }
 }
 
+extension AccountSummaryViewController {
+    func titleAndMessageForTesting(for error: NetworkError) -> (String, String) {
+            return titleAndMessage(for: error)
+    }
+    
+    //Accessing private method outside of the file
+    func forceFetchProfile() {
+        fetchProfile(group: DispatchGroup(), userId: "1")
+    }
+}
 
